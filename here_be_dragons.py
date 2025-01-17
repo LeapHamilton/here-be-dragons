@@ -14,6 +14,16 @@ class Room:
     def __str__(self):
         return f"{self.name}\n{self.description}\nExits: {', '.join(self.exits.keys())}\nItems: {', '.join(self.items)}"
 
+
+class Player:
+    def __init__(self, name) -> None:
+        self.name = name
+        self.items = []
+
+inventory = []
+
+player = Player("Richard")
+
 #rooms 
 manor_house = Room("The lord of the manor's house.", "This imposing structure sits atop a hill which overlooks the surrounding countryside for miles. To the south, past the meadow you can see a village. Over in the west meanwhile stands a dark, brooding forest.")
 inside_manor_house = Room("Inside the manor house.", "The walls are decorated with heads of deer.")
@@ -86,7 +96,8 @@ church.add_exit("north", graveyard)
 inside_church.add_exit("out", church)
 graveyard.add_exit("south", church)
 
-
+meadow.add_item("necklace")
+manor_house.add_item("coin")
 
 current_room = meadow
 gameRunning = True
@@ -97,6 +108,17 @@ while gameRunning:
 
     if command in current_room.exits:
         current_room = current_room.exits[command]
+
+    elif len(current_room.items) > 0 and command == "get " + current_room.items[0]:
+        player.items.append(current_room.items.pop(0))
+        print("You are holding " + player.items[0])
+
+
+    elif command == "drop " + player.items[0]:
+
+        current_room.items.append(player.items.pop(0))
+
+        print("You drop the " + current_room.items[0])
         
     elif command == "quit":
         print("Thanks for playing!")
